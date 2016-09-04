@@ -1,0 +1,70 @@
+import java.util.*;
+public class StringChecker
+{
+        public static boolean isBalanced(String check)
+        {
+                AStack<Character> balance = new AStack<Character>(check.length());
+                for(int i = 0; i < check.length(); i++)
+                {
+                        char temp = check.charAt(i);
+                        if(temp == '(' ||  temp == '[' ||  temp == '{')
+                        {
+                                balance.push(temp);
+                        }
+                        else if(temp== ')' ||  temp== ']' ||  temp=='}')
+                        {
+                                if(balance.isEmpty())
+                                {
+                                        return false;
+                                }
+                                else
+                                {
+                                        char store = balance.pop();
+                                        if(((temp==')' && store=='(') || (temp==']' && store=='[') || (temp=='}' && store=='{')))
+                                        {
+                                        }
+                                        else
+                                        return false;
+                                }
+                        }
+                }
+                if(balance.isEmpty())
+                {
+                        return true;
+                }
+                else
+                {
+                        return false;
+                }
+        }
+        
+        public static void main(String[] args)
+        {
+                boolean done = false;
+                Scanner keyScan = new Scanner(System.in);
+                String toCheck = "";
+                while(!done)
+                {
+                        System.out.println("Enter a string, or type \"quit\" to exit");
+                        {
+                               toCheck = keyScan.nextLine();
+                               if(toCheck.equals("quit"))
+                               {
+                                done = true;
+                               }
+                               else
+                               {
+                                        if(isBalanced(toCheck))
+                                        {
+                                                System.out.println("Balanced!");
+                                        }
+                                        else
+                                        {
+                                                System.out.println("Not balanced.");
+                                        }
+                               }
+                        }
+                        
+                }
+        }
+}

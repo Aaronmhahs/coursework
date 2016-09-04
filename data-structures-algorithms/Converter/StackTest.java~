@@ -1,0 +1,78 @@
+import java.util.*;
+public class StackTest
+{
+	public static void main(String[] args)
+	{
+		MyStack <String> stack = new MyStack <String> ();
+		Scanner keyScan = new Scanner(System.in);
+		System.out.println("Choose one of the following operations: \n-Push/add (enter the letter a) \n-Pop/delete (enter the letter d) \n-Peek (enter the letter p) \n-Check if the list is empty (enter the letter e) \n-Quit (enter the letter q)");
+		boolean again = true;
+		while(again)
+		{
+			System.out.print("Enter a menu choice: ");
+			String switchString = keyScan.nextLine();//.substring(0,1);
+			System.out.println();
+			switch (switchString)
+			{
+				case "a":
+					System.out.print("Enter a string: ");
+					String in = keyScan.nextLine();
+					System.out.println();
+					stack.push(in);
+					System.out.println("\"" + in + "\"" + " has been added to the stack.");
+					System.out.println();
+					break;
+				case "d":
+					try
+					{
+						String out = stack.pop();
+						System.out.println("\"" + out + "\"" + " has been removed from the stack.");
+						System.out.println();
+						break;
+					}
+					catch(EmptyStackException e)
+					{
+						System.out.println("ERROR: This stack is empty.");
+						System.out.println();
+						break;
+					}
+				case "p":
+					try
+					{
+						System.out.println("\"" + stack.peek() + "\"" + " is on top of the stack.");
+						System.out.println();
+						break;
+					}
+					catch(EmptyStackException e)
+					{
+						System.out.println("ERROR: This stack is empty.");
+						System.out.println();
+						break;
+					}
+				case "e":
+					if(stack.isEmpty())
+					{
+						System.out.println("This stack is empty.");
+						System.out.println();
+						break;
+					}
+					else 
+					{
+						System.out.println("This stack is NOT empty");
+						System.out.println();
+						break;
+					}
+				case "q":
+					System.out.println("Quitting.");
+					System.out.println();
+					again = false;
+					break;
+				default:
+					System.out.println("Invalid choice");
+					System.out.println();
+					break;	
+			}
+		}
+		System.out.println("Goodbye.");
+	}
+}

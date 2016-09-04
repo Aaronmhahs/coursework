@@ -1,0 +1,245 @@
+import java.util.*;
+
+public class HashTable
+{
+	private HashEntry[] hashArray;
+	private int occupied;
+	
+	private class HashEntry
+	{
+		public Object entry;
+		public boolean active;
+		
+		public HashEntry()
+		{
+			entry = null;
+			active = false;
+		}
+		
+		public HashEntry(Object entIn)
+		{
+			entry = entIn;
+			active = true;
+		}
+	}
+	
+	public HashTable(int input)
+	{
+		hashArray = new HashEntry[nextPrime(input)];	
+	}
+	
+	private boolean isPrime(int check)
+	{
+		return !new String(new char[check]).matches(".?|(..+?)\\1+");
+	}
+
+	private int nextPrime(int numElem)
+	{
+	        numElem = (numElem * 2) + 1; //make numElem the odd number just past twice the input
+	        if(isPrime(numElem))
+		{
+			return numElem;
+		}
+		else
+		{
+			numElem += 2; //go to next odd
+			while(!isPrime(numElem))
+			{
+				numElem += 2;
+			}
+			return numElem;
+		}
+	}	
+		
+	private class Iter implements Iterator
+	{
+		private int cursor;
+		
+		public Iter()
+		{
+			cursor = 0;
+			while(hasNext() && (hashArray[cursor] == null || !hashArray[cursor].active))//move until you find the first active element
+			{
+				cursor++;
+			}
+		}
+		
+		public boolean hasNext()
+		{
+			return cursor < hashArray.length;
+		}
+		
+		public Object next()
+		{
+			Student hold = (Student)hashArray[cursor].entry;
+			try
+		        {
+			        cursor++;
+				while(hasNext())//move until you find the next active element
+			        {
+			                  if(hashArray[cursor] == null)
+			                  {
+				                cursor++;
+					  }
+			 	          else if(!hashArray[cursor].active)
+				          {
+				                cursor++;
+				          }
+				          else break;
+				}
+			}
+		        catch(IndexOutOfBoundsException e)//if that ever goes beyond the limit of our hash table
+			{
+			        throw new NoSuchElementException();
+			}
+			return hold;
+		}
+		
+		public void remove()
+		{
+			throw new UnsupportedOperationException();
+		}	
+	}
+
+	private int findPosition(Object item)
+	{
+		int i = 0;
+		int hashValue = hash(item);
+		int index = hashValue;
+		while(hashArray[index] != null && !hashArray[index].entry.equals(item))
+		{
+			i++;
+			index = (hashValue + (int)Math.pow(i,2))%hashArray.length;	
+		}
+		return index;
+	}
+
+        private int hash(Object item)
+	{
+		return Math.abs(item.hashCode())% hashArray.length;
+	}
+
+	public void insert(Object item)
+	{
+		int index = findPosition(item);
+		if(hashArray[index] == null)
+		{
+			HashEntry he = new HashEntry(item);
+			hashArray[index] = he;
+			occupied++;
+			if(occupied >= (hashArray.length/2))
+			{
+				rehash();	
+			}
+			else
+			{
+				if(!hashArray[index].active)
+				{
+					hashArray[index].active = true;
+				}
+			}
+		}	
+	}
+
+	private void rehash()
+        {
+                HashEntry[] temp = hashArray;
+                hashArray = new HashEntry[nextPrime(temp.length)];
+                occupied = 0;
+                for(int i = 0; i < temp.length; i++)
+                {
+                        if(temp[i] != null && temp[i].active)
+                        {
+                                int index = findPosition(temp[i]);
+                                hashArray[index] = temp[i];
+                                occupied++;
+                        }
+                }
+        }
+
+	public void delete(Object item)
+	{
+	        int index = findPosition(item);
+	        if(hashArray[index] != null && hashArray[index].active)
+	        {
+	                hashArray[index].active = false;
+	        }
+	}
+
+	public Object find(Object item)
+	{
+		int index = findPosition(item);
+		boolean answer = false;
+		if(hashArray[index] != null && hashArray[index].active)
+	        {
+	               answer = true;
+	        }       
+	        if(answer)
+	        {
+	                return hashArray[index].entry;
+	        }
+	        else return null;
+	}	
+
+	public int elementCount()
+	{
+		int count = 0;
+		for(int i = 0; i<hashArray.length; i++)
+		{
+		        if(hashArray[i].active)
+		        {
+		                count++;
+		        }
+		}
+		return count;
+	}
+
+	public boolean isEmpty()
+	{
+		for(int i = 0; i<hashArray.length; i++)
+		{
+		        if(hashArray[i] != null && hashArray[i].active)
+		        {
+		                return false;
+		        }
+		}
+		return true;
+	}
+
+	public void makeEmpty()
+	{
+	        int size = hashArray.length;
+	        hashArray = new HashEntry[size];
+	}
+	
+	public void printTable()
+	{
+	       for(int i = 0; i<hashArray.length; i++)
+	       {
+	                System.out.print("[" + i + "]" + ": ");
+	                if(hashArray[i] == null)
+	                {
+	                        System.out.print("empty");
+	                }
+	                else
+	                {
+	                        System.out.print(hashArray[i].entry);
+	                        if(hashArray[i].active)
+	                        {
+	                                System.out.print(", active");
+	                        }
+	                        else
+	                        {
+	                               System.out.print(", inactive");
+	                        }
+	                }
+	                System.out.println();
+	       } 
+	}
+
+	public Iterator iterator()
+	{
+		return new Iter();	
+	}	
+}
+

@@ -1,0 +1,42 @@
+import java.util.*;
+
+public class ConTest
+{
+	public static void main(String[] args)
+	{
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Choose one of the following operations: \n-Infix to postfix conversion (enter the letter i) \n-Postfix expression evaluation (enter the letter p) \n-Arithmetic expression evaluation (enter the letter a) \n-Quit the program (enter the letter q)");
+		boolean again = true;
+		while(again)
+		{
+			System.out.print("Enter a menu choice: ");
+			String switchString = scan.nextLine();//.substring(0,1);
+			//System.out.println();
+			switch (switchString)
+			{
+				case "i":
+				        System.out.println("Enter an infix expression");
+					System.out.println("The postfix expression is: " + Converter.infixToPostfix(scan.nextLine()));
+					break;
+				case "p":
+				        System.out.println("Enter a postfix expression");
+					System.out.println("The value of the postFix expression is: " + Converter.postFixValue(scan.nextLine()));
+					break;
+				case "a":
+				        System.out.println("Enter an infix expression");
+					System.out.println("The value of the arithmetic expression is: " + Converter.postFixValue(Converter.infixToPostfix(scan.nextLine())));
+					break;
+				case "q":
+					System.out.println("Quitting.");
+					System.out.println();
+					again = false;
+					break;
+				default:
+					System.out.println("Invalid choice");
+					System.out.println();
+					break;	
+			}
+		}
+		System.out.println("Farewell!");
+	}
+}

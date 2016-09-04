@@ -1,2 +1,1 @@
-# java-algorithms-implementation
-Data structures and algorithms implemented in Java
+Projects completed at Cal Poly San Luis Obispo
